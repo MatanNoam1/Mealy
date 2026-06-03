@@ -1,0 +1,30 @@
+.footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  margin-top: auto;
+}
+
+.footer__inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 18px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.footer__brand {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.footer__slogan {
+  font-style: italic;
+}
+
+.footer__year {
+  margin-left: auto;
+}
