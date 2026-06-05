@@ -3,7 +3,7 @@ const router = express.Router();
 const ctrl = require('../controllers/mealplan.controller');
 const { allowRoles } = require('../middleware/auth');
 
-// specific paths before /:id
+// Declare the specific paths before /:id so they are not captured as id params.
 router.post('/generate/shoppinglist', ctrl.generateShoppingList);
 router.post('/generate', ctrl.generate);
 

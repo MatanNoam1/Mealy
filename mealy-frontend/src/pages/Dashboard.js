@@ -5,9 +5,8 @@ import Card from '../components/Card';
 import DataTable from '../components/DataTable';
 import './Dashboard.css';
 
-// Dashboard / Home (spec component #5): fetches recipes from the backend and
-// renders them as reusable Cards plus a DataTable. Handles loading, error and
-// empty states.
+// Home page: loads recipes from the backend and shows them both as Cards and in
+// a DataTable, with loading, error and empty states handled.
 function Dashboard() {
   const { user } = useAuth();
   const [recipes, setRecipes] = useState([]);
@@ -33,7 +32,7 @@ function Dashboard() {
     };
   }, []);
 
-  // Columns for the recipes DataTable; render() builds dynamic cell content.
+  // Column definitions for the recipes table; render() builds cell content.
   const columns = [
     { label: 'Title', field: 'title' },
     { label: 'Cuisine', field: 'cuisineType' },

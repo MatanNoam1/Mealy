@@ -8,13 +8,13 @@ const fail = (res, status, code, message, details = {}) =>
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Settings belong to the current logged-in user. Auth is mock, so the client
-// sends the id it received at login via the x-user-id header (defaults to 1).
+// Resolves the current user from the x-user-id header (mock auth, defaults to 1).
 const currentUser = (req) => {
   const id = parseInt(req.headers['x-user-id'], 10) || 1;
   return users.find((u) => u.userId === id);
 };
 
+// Maps a user record down to the public settings fields the frontend edits.
 const toSettings = (u) => ({
   userId: u.userId,
   firstName: u.firstName,

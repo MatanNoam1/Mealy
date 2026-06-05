@@ -3,7 +3,7 @@ const router = express.Router();
 const ctrl = require('../controllers/recipes.controller');
 const { allowRoles } = require('../middleware/auth');
 
-// /scan before /:id - avoid being swallowed as a param
+// Declare /scan before /:id so it is not captured as an id param.
 router.post('/scan', ctrl.scan);
 
 router.get('/', ctrl.getAll);

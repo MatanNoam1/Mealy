@@ -1,3 +1,5 @@
+// In-memory seed users. Data lives in this array for the run and resets on
+// restart. getNextId hands out ids for newly created users.
 const users = [
   {
     userId: 1,

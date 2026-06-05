@@ -1,13 +1,13 @@
 import './DataTable.css';
 
-// Reusable data table (spec component #7). Renders a real <table> and
-// dynamically maps over an array of backend data to generate rows.
+// Generic table that maps any array of rows onto a column definition, so it can
+// be reused for different data sets.
 //
 // Props:
-//   columns: [{ label, field, render? }]  - render(row) overrides field lookup
-//   rows:    array of objects
+//   columns: [{ label, field, render? }], where render(row) overrides field lookup
+//   rows:    array of objects to display
 //   rowKey:  field used as the React key (default 'id')
-//   emptyMessage: text shown when rows is empty
+//   emptyMessage: text shown when there are no rows
 function DataTable({ columns, rows, rowKey = 'id', emptyMessage = 'No data.' }) {
   return (
     <div className="datatable__wrap">

@@ -1,12 +1,12 @@
 import './Card.css';
 
-// Reusable presentational card (spec component #6). Receives one recipe via
-// props and is rendered once per recipe on the dashboard (>= 3 instances).
+// Presentational card for a single recipe. The dashboard renders one per
+// recipe, so it stays purely driven by its props.
 function Card({ recipe }) {
   if (!recipe) return null;
 
   const { title, cuisineType, prepTime, servings, tags = [], imageUrl } = recipe;
-e
+
   return (
     <article className="card">
       <div className="card__media">

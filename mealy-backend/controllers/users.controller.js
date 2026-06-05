@@ -1,5 +1,6 @@
 const { users, getNextId } = require('../models/users.model');
 
+// Helpers for the shared { success, data, error } response shape.
 const ok = (res, data, status = 200) =>
   res.status(status).json({ success: true, data, error: null });
 
@@ -17,8 +18,8 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 exports.getAll = (req, res) => ok(res, users);
 
-// Current logged-in user. Auth is mock, so the client sends the id it got at
-// login via the x-user-id header. Defaults to user 1 when the header is absent.
+// Returns the current user. Auth is mock, so the client identifies itself with
+// the x-user-id header; defaults to user 1 when the header is missing.
 exports.getMe = (req, res) => {
   const id = parseId(req.headers['x-user-id']) || 1;
   const user = users.find(u => u.userId === id);
@@ -26,10 +27,9 @@ exports.getMe = (req, res) => {
   ok(res, user);
 };
 
-// Self-update: the logged-in user changes their OWN details. Identified by the
-// x-user-id header (default 1), with NO role restriction -- any authenticated
-// user can edit their own profile. This is distinct from PUT /users/:id, which
-// is an admin/manager user-management endpoint.
+// Lets the logged-in user edit their own profile, identified by the x-user-id
+// header (default 1). No role restriction here: this is separate from
+// PUT /users/:id, which is the admin/manager endpoint for managing any user.
 exports.updateMe = (req, res) => {
   const id = parseId(req.headers['x-user-id']) || 1;
   const user = users.find(u => u.userId === id);
@@ -62,6 +62,7 @@ exports.getById = (req, res) => {
   ok(res, user);
 };
 
+// Admin/manager: create a new user from the required fields.
 exports.create = (req, res) => {
   const { firstName, lastName, userRole, email, dietaryPreferences } = req.body;
   const missing = validateRequired(req.body, ['firstName', 'lastName', 'userRole']);
@@ -81,6 +82,7 @@ exports.create = (req, res) => {
   ok(res, { userId: user.userId }, 201);
 };
 
+// Admin/manager: replace another user's core fields.
 exports.update = (req, res) => {
   const id = parseId(req.params.id);
   if (!id) return fail(res, 400, 'VALIDATION_ERROR', 'Invalid id param.', { param: 'id' });
@@ -97,6 +99,7 @@ exports.update = (req, res) => {
   ok(res, { userId: user.userId });
 };
 
+// Update only a user's dietary preferences.
 exports.updatePreferences = (req, res) => {
   const id = parseId(req.params.id);
   if (!id) return fail(res, 400, 'VALIDATION_ERROR', 'Invalid id param.', { param: 'id' });
@@ -109,6 +112,7 @@ exports.updatePreferences = (req, res) => {
   ok(res, { userId: user.userId });
 };
 
+// Admin only: delete a user by id.
 exports.remove = (req, res) => {
   const id = parseId(req.params.id);
   if (!id) return fail(res, 400, 'VALIDATION_ERROR', 'Invalid id param.', { param: 'id' });

@@ -7,7 +7,7 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer__inner">
-        <span className="footer__brand">Mealy &dash; Matan &amp; Or</span>
+        <span className="footer__brand">Mealy - Matan &amp; Or</span>
         <span className="footer__slogan">
           Plan your meals, skip the stress.
         </span>

@@ -7,9 +7,9 @@ import './Settings.css';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DIET_OPTIONS = ['vegetarian', 'vegan', 'gluten-free', 'keto', 'kosher'];
 
-// Settings page (spec component #4): loads current settings from the backend,
-// shows them in a form with >= 3 editable fields (Username, Email, Theme +
-// dietary preferences), validates input, and shows loading/success/error.
+// Settings page: loads the current profile and lets the user edit username,
+// email, theme and dietary preferences, with validation and loading, success
+// and error states.
 function Settings() {
   const { user, updateUser } = useAuth();
 
@@ -66,7 +66,7 @@ function Settings() {
     setSuccess('');
   };
 
-  // Theme is applied live so the user sees it immediately, and persisted.
+  // Apply the theme right away so the change is visible before saving.
   const handleThemeChange = (theme) => {
     setField('theme', theme);
     applyTheme(theme);
@@ -98,7 +98,7 @@ function Settings() {
       });
       setSuccess('Settings saved.');
       applyTheme(updated.theme || form.theme);
-      // Keep the navbar name + cached profile in sync.
+      // Keep the navbar name and cached profile in sync with the saved values.
       if (user) {
         updateUser({
           ...user,

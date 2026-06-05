@@ -1,6 +1,7 @@
 const { mealplans, getNextId } = require('../models/mealplans.model');
 const { recipes } = require('../models/recipes.model');
 
+// Helpers for the shared { success, data, error } response shape.
 const ok = (res, data, status = 200) =>
   res.status(status).json({ success: true, data, error: null });
 
@@ -24,6 +25,9 @@ exports.getById = (req, res) => {
   ok(res, plan);
 };
 
+// Builds a meal plan over the requested number of days. Walks the chosen
+// recipes in order and repeats each one for as many days as it has servings,
+// then saves and returns the new plan.
 exports.generate = (req, res) => {
   const { days = 7, preferences = [], recipeIds = [] } = req.body;
   const id = getNextId();
@@ -65,6 +69,7 @@ exports.generate = (req, res) => {
   ok(res, plan, 201);
 };
 
+// Replaces the meals for a single day inside an existing plan.
 exports.updateDay = (req, res) => {
   const id = parseId(req.params.id);
   if (!id) return fail(res, 400, 'VALIDATION_ERROR', 'Invalid id param.', { param: 'id' });
@@ -85,6 +90,7 @@ exports.updateDay = (req, res) => {
   ok(res, { id: plan.id });
 };
 
+// Stub: returns a fixed shopping list rather than computing it from the plan.
 exports.generateShoppingList = (req, res) => {
   const { planId } = req.body;
   ok(res, {

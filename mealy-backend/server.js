@@ -14,8 +14,8 @@ app.use(cors());
 app.use(express.json());
 app.use(logger);
 
-// Routers are mounted twice: at the base path (original Assignment 2 paths)
-// and under /api (the paths the Assignment 3 frontend spec expects).
+// Each router is mounted on its base path and again under /api, so both the
+// original Assignment 2 routes and the Assignment 3 frontend paths resolve.
 const routers = [
   ['/users', usersRouter],
   ['/recipes', recipesRouter],
@@ -28,6 +28,7 @@ routers.forEach(([path, router]) => {
   app.use('/api' + path, router);
 });
 
+// Catch-all for unmatched routes.
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -36,6 +37,7 @@ app.use((req, res) => {
   });
 });
 
+// Last-resort error handler so unexpected failures return a clean 500.
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({

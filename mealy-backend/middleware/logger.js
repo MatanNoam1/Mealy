@@ -1,3 +1,4 @@
+// Logs each request once the response is sent: method, url, status and duration.
 const logger = (req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {

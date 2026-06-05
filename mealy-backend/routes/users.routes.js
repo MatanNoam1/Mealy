@@ -5,8 +5,8 @@ const { allowRoles } = require('../middleware/auth');
 
 router.get('/', ctrl.getAll);
 router.post('/', ctrl.create);
-router.get('/me', ctrl.getMe); // before /:id so "me" is not treated as an id param
-router.put('/me', ctrl.updateMe); // self-update of own profile (no admin gate)
+router.get('/me', ctrl.getMe); // declared before /:id so "me" is not read as an id
+router.put('/me', ctrl.updateMe); // self-update of own profile, no role gate
 router.put('/:id/preferences', ctrl.updatePreferences);
 router.get('/:id', ctrl.getById);
 router.put('/:id', allowRoles('admin', 'manager'), ctrl.update);

@@ -1,7 +1,8 @@
 # Mealy - Frontend (Assignment 3)
 
-React frontend for the Mealy meal-planning app, connected to the Express REST
-API from Assignment 2. Built with create-react-app, axios and React Router.
+React frontend for the Mealy meal-planning app. It talks to the Express REST
+API built in Assignment 2 and is made with create-react-app, axios and React
+Router.
 
 Team: Matan & Or.
 
@@ -74,7 +75,9 @@ src/
 
 ## Notes
 
-- Reusable `Card` is rendered once per recipe on the dashboard (≥ 3 instances).
-- `DataTable` dynamically maps an array of backend recipes into table rows.
-- Theme choice persists in `localStorage` and across reloads.
-- Backend data is in-memory, so edits reset when the backend restarts.
+- The `Card` component is reusable and rendered once per recipe, so the
+  dashboard usually shows several instances.
+- `DataTable` is generic: it maps whatever array of recipes comes back from the
+  backend into table rows.
+- The theme choice is saved in `localStorage`, so it survives a page reload.
+- The backend keeps data in memory, so any edits reset when it restarts.

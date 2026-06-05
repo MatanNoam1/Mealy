@@ -5,8 +5,8 @@ import './Login.css';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Login page (spec component #1): email + password with client-side validation,
-// loading state, backend error message, redirect on success.
+// Login page: validates email and password on the client, shows a loading
+// state and any backend error, and redirects to the dashboard on success.
 function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();

@@ -1,5 +1,6 @@
 const { recipes, getNextId } = require('../models/recipes.model');
 
+// Helpers for the shared { success, data, error } response shape.
 const ok = (res, data, status = 200) =>
   res.status(status).json({ success: true, data, error: null });
 
@@ -21,6 +22,7 @@ exports.getById = (req, res) => {
   ok(res, recipe);
 };
 
+// Create a recipe. title and instructions are required; the rest get defaults.
 exports.create = (req, res) => {
   const { title, ingredients, instructions, prepTime, servings, isPublic, imageUrl, cuisineType, tags, userId } = req.body;
   const missing = ['title', 'instructions'].find(f => !req.body[f]);
@@ -43,6 +45,7 @@ exports.create = (req, res) => {
   ok(res, { id: recipe.id }, 201);
 };
 
+// Partial update: only the fields present in the body are overwritten.
 exports.update = (req, res) => {
   const id = parseId(req.params.id);
   if (!id) return fail(res, 400, 'VALIDATION_ERROR', 'Invalid id param.', { param: 'id' });
@@ -62,6 +65,8 @@ exports.remove = (req, res) => {
   ok(res, { id: recipe.id });
 };
 
+// Stub for the "scan a photo" feature: returns a fixed recipe instead of
+// running real image recognition.
 exports.scan = (req, res) => {
   ok(res, {
     id: 99,

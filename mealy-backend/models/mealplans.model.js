@@ -1,3 +1,5 @@
+// In-memory seed meal plans, each linking days to recipes. Resets on restart;
+// getNextId assigns ids for generated plans.
 const mealplans = [
   {
     id: 1,

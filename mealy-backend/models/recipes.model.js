@@ -1,3 +1,5 @@
+// In-memory seed recipes used across the API and shown on the frontend
+// dashboard. Resets on restart; getNextId assigns ids for new recipes.
 const recipes = [
   {
     id: 1,

@@ -2,8 +2,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
-// Top navigation shown on every page after login (spec component #2).
-// Shows logo, nav links, the logged-in user name and a logout button.
+// Top navigation bar for the logged-in pages: logo, page links, the current
+// user's name and a logout button.
 function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ function Navbar() {
     navigate('/login');
   };
 
-  // Show the username (firstName) as-is, matching the Settings "Username" field.
+  // Same value shown in the Settings "Username" field; falls back to Guest.
   const displayName = user ? user.firstName : 'Guest';
 
   return (
