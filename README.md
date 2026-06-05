@@ -2,7 +2,7 @@
 
 Meal-planning web app. Express REST API backend + React SPA frontend.
 
-Team: Matan Noam & Or.
+Team: Matan Noam & Or Cohen.
 
 ## Structure
 
