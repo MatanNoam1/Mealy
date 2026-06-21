@@ -1,32 +1,45 @@
-const { users } = require('../models/users.model');
+const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
+const db = require('../../models');
+const { ok, fail } = require('../utils/respond');
+const { userPublic } = require('../utils/serialize');
 
-// Helpers for the shared { success, data, error } response shape.
-const ok = (res, data, status = 200) =>
-  res.status(status).json({ success: true, data, error: null });
+// Opaque session token. We are not using full JWT (out of scope) - the frontend
+// identifies itself on later requests with the x-user-id / x-user-role headers.
+const makeToken = () => crypto.randomBytes(24).toString('hex');
 
-const fail = (res, status, code, message, details = {}) =>
-  res.status(status).json({ success: false, data: null, error: { code, message, details } });
-
-// Validates the body and returns a mock user id and token (no real account is
-// created in this in-memory backend).
-exports.register = (req, res) => {
-  const { firstName, lastName, email, password, preferences } = req.body;
+// Create a real account: hash the password and persist the user.
+exports.register = async (req, res) => {
+  const { firstName, lastName, email, password, dietaryPreferences } = req.body;
   if (!firstName || !lastName || !email || !password)
     return fail(res, 400, 'VALIDATION_ERROR', 'firstName, lastName, email, and password are required.');
-  ok(res, { userId: 42, token: 'mock-jwt-token-abc123' }, 201);
+
+  const existing = await db.User.findOne({ where: { email } });
+  if (existing) return fail(res, 409, 'EMAIL_TAKEN', 'An account with this email already exists.', { field: 'email' });
+
+  const user = await db.User.create({
+    firstName,
+    lastName,
+    email,
+    passwordHash: bcrypt.hashSync(password, 10),
+    dietaryPreferences: Array.isArray(dietaryPreferences) ? dietaryPreferences : [],
+    userRole: 'user'
+  });
+
+  ok(res, { userId: user.id, userRole: user.userRole, token: makeToken(), user: userPublic(user) }, 201);
 };
 
-exports.login = (req, res) => {
+// Verify email + password against the database.
+exports.login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
     return fail(res, 400, 'VALIDATION_ERROR', 'email and password are required.');
-  // Mock auth: match the user by email so the correct profile loads, and
-  // fall back to user 1 for unknown emails so demo logins still work.
-  const matched = users.find((u) => u.email === email);
-  const userId = matched ? matched.userId : 1;
-  ok(res, { userId, token: 'mock-jwt-token-abc123' });
+
+  const user = await db.User.findOne({ where: { email } });
+  if (!user || !bcrypt.compareSync(password, user.passwordHash))
+    return fail(res, 401, 'INVALID_CREDENTIALS', 'Invalid email or password.');
+
+  ok(res, { userId: user.id, userRole: user.userRole, token: makeToken(), user: userPublic(user) });
 };
 
-exports.logout = (req, res) => {
-  ok(res, { message: 'Logged out.' });
-};
+exports.logout = (req, res) => ok(res, { message: 'Logged out.' });

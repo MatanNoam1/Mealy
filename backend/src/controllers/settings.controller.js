@@ -1,22 +1,11 @@
-const { users } = require('../models/users.model');
-
-const ok = (res, data, status = 200) =>
-  res.status(status).json({ success: true, data, error: null });
-
-const fail = (res, status, code, message, details = {}) =>
-  res.status(status).json({ success: false, data: null, error: { code, message, details } });
+const db = require('../../models');
+const { ok, fail, currentUserId } = require('../utils/respond');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Resolves the current user from the x-user-id header (mock auth, defaults to 1).
-const currentUser = (req) => {
-  const id = parseInt(req.headers['x-user-id'], 10) || 1;
-  return users.find((u) => u.userId === id);
-};
-
-// Maps a user record down to the public settings fields the frontend edits.
+// Public settings view of a user record.
 const toSettings = (u) => ({
-  userId: u.userId,
+  userId: u.id,
   firstName: u.firstName,
   lastName: u.lastName,
   email: u.email,
@@ -24,20 +13,18 @@ const toSettings = (u) => ({
   dietaryPreferences: u.dietaryPreferences || []
 });
 
-exports.getSettings = (req, res) => {
-  const user = currentUser(req);
+exports.getSettings = async (req, res) => {
+  const user = await db.User.findByPk(currentUserId(req));
   if (!user) return fail(res, 404, 'NOT_FOUND', 'User not found.');
   ok(res, toSettings(user));
 };
 
-exports.updateSettings = (req, res) => {
-  const user = currentUser(req);
+exports.updateSettings = async (req, res) => {
+  const user = await db.User.findByPk(currentUserId(req));
   if (!user) return fail(res, 404, 'NOT_FOUND', 'User not found.');
 
   const { firstName, email, theme, dietaryPreferences } = req.body;
-
-  if (!firstName)
-    return fail(res, 400, 'VALIDATION_ERROR', 'Missing required field: firstName', { field: 'firstName' });
+  if (!firstName) return fail(res, 400, 'VALIDATION_ERROR', 'Missing required field: firstName', { field: 'firstName' });
   if (email !== undefined && email !== '' && !EMAIL_RE.test(email))
     return fail(res, 400, 'VALIDATION_ERROR', 'Invalid email format.', { field: 'email' });
   if (theme !== undefined && !['light', 'dark'].includes(theme))
@@ -47,7 +34,6 @@ exports.updateSettings = (req, res) => {
   if (email !== undefined) user.email = email;
   if (theme !== undefined) user.theme = theme;
   if (dietaryPreferences !== undefined) user.dietaryPreferences = dietaryPreferences;
-  user.updateDate = new Date().toISOString();
-
+  await user.save();
   ok(res, toSettings(user));
 };

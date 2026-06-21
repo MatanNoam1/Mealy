@@ -7,6 +7,9 @@ import Layout from './components/Layout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
+import MealPlans from './pages/MealPlans';
+import AI from './pages/AI';
+import RecipePage from './pages/RecipePage';
 import './App.css';
 
 // App entry point and routing configuration.
@@ -34,6 +37,9 @@ function App() {
         }
       >
         <Route path="/" element={<Dashboard />} />
+        <Route path="/recipes/:id" element={<RecipePage />} />
+        <Route path="/mealplans" element={<MealPlans />} />
+        <Route path="/ai" element={<AI />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
 

@@ -1,0 +1,10 @@
+const path = require('path');
+
+// Tell sequelize-cli where the config, models, migrations and seeders live so
+// the project follows the Assignment 4 required structure.
+module.exports = {
+  config: path.resolve('config', 'config.js'),
+  'models-path': path.resolve('models'),
+  'migrations-path': path.resolve('migrations'),
+  'seeders-path': path.resolve('seeders')
+};

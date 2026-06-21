@@ -30,6 +30,12 @@ function Navbar() {
           <NavLink to="/" end className="navbar__link">
             Dashboard
           </NavLink>
+          <NavLink to="/mealplans" className="navbar__link">
+            Meal Plans
+          </NavLink>
+          <NavLink to="/ai" className="navbar__link">
+            AI
+          </NavLink>
           <NavLink to="/settings" className="navbar__link">
             Settings
           </NavLink>

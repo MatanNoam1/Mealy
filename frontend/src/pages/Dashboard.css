@@ -67,3 +67,47 @@
     transform: rotate(360deg);
   }
 }
+
+/* Assignment 4: add button + live indicator */
+.dashboard__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.dashboard__add {
+  padding: 0.6rem 1.1rem;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.dashboard__add:hover { background: var(--brand-dark); }
+
+.dashboard__search {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.dashboard__search-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  font: inherit;
+  font-size: 14px;
+  background: var(--surface);
+  color: var(--text);
+}
+.dashboard__search-input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(232, 85, 45, 0.15);
+}
+
+.live-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #9ca3af;
+  margin: 0 0.35rem 0 0.25rem;
+}
+.live-dot--on { background: #16a34a; box-shadow: 0 0 0 3px rgba(22,163,74,0.2); }

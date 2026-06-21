@@ -1,318 +1,16 @@
 {
   "info": {
-    "_postman_id": "mealy-backend-collection",
-    "name": "Mealy Backend API",
-    "description": "Full API collection for Mealy Backend (Assignment 2)",
+    "_postman_id": "mealy-backend-a4-collection",
+    "name": "Mealy Backend API (Assignment 4)",
+    "description": "Full-stack Mealy API: MySQL + Sequelize, per-user recipes, sharing (WebSocket events), and Gemini AI. All responses use the { success, data, error } envelope. Set the {{userId}} and {{userRole}} collection variables to act as a given user.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api" },
+    { "key": "userId", "value": "1" },
+    { "key": "userRole", "value": "admin" }
+  ],
   "item": [
-    {
-      "name": "Users",
-      "item": [
-        {
-          "name": "GET All Users",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "http://localhost:3000/users", "host": ["localhost"], "port": "3000", "path": ["users"] }
-          }
-        },
-        {
-          "name": "GET User by ID",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "http://localhost:3000/users/1", "host": ["localhost"], "port": "3000", "path": ["users", "1"] }
-          }
-        },
-        {
-          "name": "GET User by ID - 404",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "http://localhost:3000/users/999", "host": ["localhost"], "port": "3000", "path": ["users", "999"] }
-          }
-        },
-        {
-          "name": "POST Create User",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Avi\",\n  \"lastName\": \"Ben\",\n  \"userRole\": \"user\",\n  \"email\": \"avi@mealy.com\",\n  \"dietaryPreferences\": [\"vegetarian\"]\n}"
-            },
-            "url": { "raw": "http://localhost:3000/users", "host": ["localhost"], "port": "3000", "path": ["users"] }
-          }
-        },
-        {
-          "name": "POST Create User - 400 Missing Fields",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Avi\"\n}"
-            },
-            "url": { "raw": "http://localhost:3000/users", "host": ["localhost"], "port": "3000", "path": ["users"] }
-          }
-        },
-        {
-          "name": "PUT Update Own Profile (self)",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-user-id", "value": "3" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Yossi\",\n  \"lastName\": \"Levi\",\n  \"email\": \"yossi.new@mealy.com\",\n  \"dietaryPreferences\": [\"vegan\"],\n  \"theme\": \"dark\"\n}"
-            },
-            "url": { "raw": "http://localhost:3000/users/me", "host": ["localhost"], "port": "3000", "path": ["users", "me"] }
-          }
-        },
-        {
-          "name": "PUT Update User (admin)",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-user-role", "value": "admin" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Matan\",\n  \"lastName\": \"Updated\",\n  \"userRole\": \"admin\",\n  \"email\": \"matan@mealy.com\",\n  \"dietaryPreferences\": [\"vegetarian\", \"gluten-free\"]\n}"
-            },
-            "url": { "raw": "http://localhost:3000/users/1", "host": ["localhost"], "port": "3000", "path": ["users", "1"] }
-          }
-        },
-        {
-          "name": "PUT Update User - 403 Forbidden (user role)",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-user-role", "value": "user" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Matan\",\n  \"lastName\": \"Updated\",\n  \"userRole\": \"admin\"\n}"
-            },
-            "url": { "raw": "http://localhost:3000/users/1", "host": ["localhost"], "port": "3000", "path": ["users", "1"] }
-          }
-        },
-        {
-          "name": "PUT Update User Preferences",
-          "request": {
-            "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"dietaryPreferences\": [\"vegan\", \"nut-free\"]\n}"
-            },
-            "url": { "raw": "http://localhost:3000/users/1/preferences", "host": ["localhost"], "port": "3000", "path": ["users", "1", "preferences"] }
-          }
-        },
-        {
-          "name": "PUT Update User Preferences - 404",
-          "request": {
-            "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"dietaryPreferences\": [\"vegan\"]\n}"
-            },
-            "url": { "raw": "http://localhost:3000/users/999/preferences", "host": ["localhost"], "port": "3000", "path": ["users", "999", "preferences"] }
-          }
-        },
-        {
-          "name": "DELETE User (admin)",
-          "request": {
-            "method": "DELETE",
-            "header": [{ "key": "x-user-role", "value": "admin" }],
-            "url": { "raw": "http://localhost:3000/users/3", "host": ["localhost"], "port": "3000", "path": ["users", "3"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Recipes",
-      "item": [
-        {
-          "name": "GET All Recipes",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "http://localhost:3000/recipes", "host": ["localhost"], "port": "3000", "path": ["recipes"] }
-          }
-        },
-        {
-          "name": "GET Recipe by ID",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "http://localhost:3000/recipes/1", "host": ["localhost"], "port": "3000", "path": ["recipes", "1"] }
-          }
-        },
-        {
-          "name": "GET Recipe by ID - 404",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "http://localhost:3000/recipes/999", "host": ["localhost"], "port": "3000", "path": ["recipes", "999"] }
-          }
-        },
-        {
-          "name": "POST Create Recipe",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Pasta Carbonara\",\n  \"instructions\": \"Cook pasta, mix with eggs and cheese.\",\n  \"prepTime\": 30,\n  \"servings\": 2,\n  \"cuisineType\": \"Italian\",\n  \"tags\": [\"pasta\"]\n}"
-            },
-            "url": { "raw": "http://localhost:3000/recipes", "host": ["localhost"], "port": "3000", "path": ["recipes"] }
-          }
-        },
-        {
-          "name": "POST Create Recipe - 400 Missing Fields",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Pasta\"\n}"
-            },
-            "url": { "raw": "http://localhost:3000/recipes", "host": ["localhost"], "port": "3000", "path": ["recipes"] }
-          }
-        },
-        {
-          "name": "POST Scan Recipe (AI)",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"imageUrl\": \"https://example.com/food.jpg\"\n}"
-            },
-            "url": { "raw": "http://localhost:3000/recipes/scan", "host": ["localhost"], "port": "3000", "path": ["recipes", "scan"] }
-          }
-        },
-        {
-          "name": "PUT Update Recipe (admin)",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-user-role", "value": "admin" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Shakshuka Updated\",\n  \"prepTime\": 25\n}"
-            },
-            "url": { "raw": "http://localhost:3000/recipes/1", "host": ["localhost"], "port": "3000", "path": ["recipes", "1"] }
-          }
-        },
-        {
-          "name": "DELETE Recipe (admin)",
-          "request": {
-            "method": "DELETE",
-            "header": [{ "key": "x-user-role", "value": "admin" }],
-            "url": { "raw": "http://localhost:3000/recipes/5", "host": ["localhost"], "port": "3000", "path": ["recipes", "5"] }
-          }
-        },
-        {
-          "name": "DELETE Recipe - 403 Forbidden (manager)",
-          "request": {
-            "method": "DELETE",
-            "header": [{ "key": "x-user-role", "value": "manager" }],
-            "url": { "raw": "http://localhost:3000/recipes/1", "host": ["localhost"], "port": "3000", "path": ["recipes", "1"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Meal Plans",
-      "item": [
-        {
-          "name": "GET All Meal Plans",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "http://localhost:3000/mealplan", "host": ["localhost"], "port": "3000", "path": ["mealplan"] }
-          }
-        },
-        {
-          "name": "GET Meal Plan by ID",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "http://localhost:3000/mealplan/1", "host": ["localhost"], "port": "3000", "path": ["mealplan", "1"] }
-          }
-        },
-        {
-          "name": "POST Generate Meal Plan",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"days\": 5,\n  \"preferences\": [\"vegetarian\"],\n  \"recipeIds\": [1, 4]\n}"
-            },
-            "url": { "raw": "http://localhost:3000/mealplan/generate", "host": ["localhost"], "port": "3000", "path": ["mealplan", "generate"] }
-          }
-        },
-        {
-          "name": "POST Generate Shopping List",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"planId\": 1\n}"
-            },
-            "url": { "raw": "http://localhost:3000/mealplan/generate/shoppinglist", "host": ["localhost"], "port": "3000", "path": ["mealplan", "generate", "shoppinglist"] }
-          }
-        },
-        {
-          "name": "PUT Update Day Meals & Servings",
-          "request": {
-            "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"day\": \"Monday\",\n  \"meals\": [\n    { \"recipeId\": 1, \"mealType\": \"dinner\", \"servings\": 3 }\n  ]\n}"
-            },
-            "url": { "raw": "http://localhost:3000/mealplan/1/day", "host": ["localhost"], "port": "3000", "path": ["mealplan", "1", "day"] }
-          }
-        },
-        {
-          "name": "PUT Update Day Meals - 404 Plan",
-          "request": {
-            "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"day\": \"Monday\",\n  \"meals\": [\n    { \"recipeId\": 1, \"mealType\": \"dinner\", \"servings\": 3 }\n  ]\n}"
-            },
-            "url": { "raw": "http://localhost:3000/mealplan/999/day", "host": ["localhost"], "port": "3000", "path": ["mealplan", "999", "day"] }
-          }
-        },
-        {
-          "name": "PUT Update Day Meals - 404 Day",
-          "request": {
-            "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"day\": \"Sunday\",\n  \"meals\": [\n    { \"recipeId\": 2, \"mealType\": \"dinner\", \"servings\": 2 }\n  ]\n}"
-            },
-            "url": { "raw": "http://localhost:3000/mealplan/2/day", "host": ["localhost"], "port": "3000", "path": ["mealplan", "2", "day"] }
-          }
-        },
-        {
-          "name": "DELETE Meal Plan (admin)",
-          "request": {
-            "method": "DELETE",
-            "header": [{ "key": "x-user-role", "value": "admin" }],
-            "url": { "raw": "http://localhost:3000/mealplan/1", "host": ["localhost"], "port": "3000", "path": ["mealplan", "1"] }
-          }
-        }
-      ]
-    },
     {
       "name": "Auth",
       "item": [
@@ -321,11 +19,8 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Avi\",\n  \"lastName\": \"Ben\",\n  \"email\": \"avi@mealy.com\",\n  \"password\": \"secret123\",\n  \"preferences\": [\"vegan\"]\n}"
-            },
-            "url": { "raw": "http://localhost:3000/auth/register", "host": ["localhost"], "port": "3000", "path": ["auth", "register"] }
+            "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"Avi\",\n  \"lastName\": \"Ben\",\n  \"email\": \"avi@mealy.com\",\n  \"password\": \"123456\"\n}" },
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] }
           }
         },
         {
@@ -333,23 +28,191 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"matan@mealy.com\",\n  \"password\": \"secret123\"\n}"
-            },
-            "url": { "raw": "http://localhost:3000/auth/login", "host": ["localhost"], "port": "3000", "path": ["auth", "login"] }
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"matan@mealy.com\",\n  \"password\": \"123456\"\n}" },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
           }
         },
         {
-          "name": "POST Login - 400 Missing Fields",
+          "name": "POST Logout",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"matan@mealy.com\"\n}"
-            },
-            "url": { "raw": "http://localhost:3000/auth/login", "host": ["localhost"], "port": "3000", "path": ["auth", "login"] }
+            "url": { "raw": "{{baseUrl}}/auth/logout", "host": ["{{baseUrl}}"], "path": ["auth", "logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "GET All Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-user-id", "value": "{{userId}}" }, { "key": "x-user-role", "value": "{{userRole}}" }],
+            "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] }
+          }
+        },
+        {
+          "name": "GET Current User (me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-user-id", "value": "{{userId}}" }],
+            "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] }
+          }
+        },
+        {
+          "name": "PUT Update Own Profile (me)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "x-user-id", "value": "{{userId}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"Matan\",\n  \"dietaryPreferences\": [\"vegetarian\"],\n  \"theme\": \"dark\"\n}" },
+            "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recipes",
+      "item": [
+        {
+          "name": "GET My Recipes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-user-id", "value": "{{userId}}" }],
+            "url": { "raw": "{{baseUrl}}/recipes/mine", "host": ["{{baseUrl}}"], "path": ["recipes", "mine"] }
+          }
+        },
+        {
+          "name": "GET Shared With Me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-user-id", "value": "{{userId}}" }],
+            "url": { "raw": "{{baseUrl}}/recipes/shared", "host": ["{{baseUrl}}"], "path": ["recipes", "shared"] }
+          }
+        },
+        {
+          "name": "GET All Recipes",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/recipes", "host": ["{{baseUrl}}"], "path": ["recipes"] }
+          }
+        },
+        {
+          "name": "POST Create Recipe",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "x-user-id", "value": "{{userId}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Pancakes\",\n  \"mealType\": \"breakfast\",\n  \"servings\": 2,\n  \"prepTime\": 15,\n  \"cuisineType\": \"American\",\n  \"ingredients\": [{\"name\": \"Flour\", \"quantity\": 200, \"unit\": \"g\"}],\n  \"instructions\": \"Mix and fry.\",\n  \"tags\": [\"sweet\"]\n}" },
+            "url": { "raw": "{{baseUrl}}/recipes", "host": ["{{baseUrl}}"], "path": ["recipes"] }
+          }
+        },
+        {
+          "name": "PUT Update Recipe",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "x-user-id", "value": "{{userId}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"servings\": 4\n}" },
+            "url": { "raw": "{{baseUrl}}/recipes/2", "host": ["{{baseUrl}}"], "path": ["recipes", "2"] }
+          }
+        },
+        {
+          "name": "DELETE Recipe",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "x-user-id", "value": "{{userId}}" }],
+            "url": { "raw": "{{baseUrl}}/recipes/2", "host": ["{{baseUrl}}"], "path": ["recipes", "2"] }
+          }
+        },
+        {
+          "name": "POST Share Recipe (by email)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "x-user-id", "value": "{{userId}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"dana@mealy.com\"\n}" },
+            "url": { "raw": "{{baseUrl}}/recipes/2/share", "host": ["{{baseUrl}}"], "path": ["recipes", "2", "share"] }
+          }
+        },
+        {
+          "name": "DELETE Unshare Recipe",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "x-user-id", "value": "{{userId}}" }],
+            "url": { "raw": "{{baseUrl}}/recipes/2/share/2", "host": ["{{baseUrl}}"], "path": ["recipes", "2", "share", "2"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Meal Plans",
+      "item": [
+        {
+          "name": "GET My Meal Plans",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-user-id", "value": "{{userId}}" }],
+            "url": { "raw": "{{baseUrl}}/mealplan", "host": ["{{baseUrl}}"], "path": ["mealplan"] }
+          }
+        },
+        {
+          "name": "DELETE Meal Plan",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "x-user-id", "value": "{{userId}}" }],
+            "url": { "raw": "{{baseUrl}}/mealplan/1", "host": ["{{baseUrl}}"], "path": ["mealplan", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "item": [
+        {
+          "name": "GET Settings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-user-id", "value": "{{userId}}" }],
+            "url": { "raw": "{{baseUrl}}/settings", "host": ["{{baseUrl}}"], "path": ["settings"] }
+          }
+        },
+        {
+          "name": "PUT Settings",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "x-user-id", "value": "{{userId}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"Matan\",\n  \"theme\": \"dark\",\n  \"dietaryPreferences\": [\"vegetarian\"]\n}" },
+            "url": { "raw": "{{baseUrl}}/settings", "host": ["{{baseUrl}}"], "path": ["settings"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI (Gemini)",
+      "item": [
+        {
+          "name": "POST AI Meal Plan",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "x-user-id", "value": "{{userId}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"days\": 5,\n  \"diversity\": 2,\n  \"targetServings\": 2\n}" },
+            "url": { "raw": "{{baseUrl}}/ai/mealplan", "host": ["{{baseUrl}}"], "path": ["ai", "mealplan"] }
+          }
+        },
+        {
+          "name": "POST AI Recommendations",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "x-user-id", "value": "{{userId}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"dietaryPreferences\": [\"vegetarian\"]\n}" },
+            "url": { "raw": "{{baseUrl}}/ai/recommendations", "host": ["{{baseUrl}}"], "path": ["ai", "recommendations"] }
+          }
+        },
+        {
+          "name": "POST AI Recipe Scan (image upload)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "x-user-id", "value": "{{userId}}" }],
+            "body": { "mode": "formdata", "formdata": [{ "key": "image", "type": "file", "src": [] }] },
+            "url": { "raw": "{{baseUrl}}/ai/recipe-scan", "host": ["{{baseUrl}}"], "path": ["ai", "recipe-scan"] }
           }
         }
       ]
