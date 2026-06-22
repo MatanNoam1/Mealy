@@ -34,7 +34,7 @@ function Navbar() {
             Meal Plans
           </NavLink>
           <NavLink to="/ai" className="navbar__link">
-            AI
+            Explore New Recipes
           </NavLink>
           <NavLink to="/settings" className="navbar__link">
             Settings
