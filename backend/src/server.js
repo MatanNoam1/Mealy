@@ -1,5 +1,6 @@
 require('dotenv').config();
 const http = require('http');
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const { Server } = require('socket.io');
@@ -40,9 +41,19 @@ const routers = [
   ['/settings', settingsRouter],
   ['/ai', aiRouter]
 ];
-routers.forEach(([path, router]) => {
-  app.use(path, router);
-  app.use('/api' + path, router);
+routers.forEach(([basePath, router]) => {
+  app.use(basePath, router);
+  app.use('/api' + basePath, router);
+});
+
+// In production, serve the compiled React frontend from this same server so the
+// whole app deploys as one service. The build lives at ../../frontend/build.
+const FRONTEND_BUILD = path.join(__dirname, '../../frontend/build');
+app.use(express.static(FRONTEND_BUILD));
+// Any non-API GET falls through to the React entry point so client-side routing
+// (react-router) works on refresh. Express 5 needs a RegExp here, not '*'.
+app.get(/^(?!\/api\/).*/, (req, res) => {
+  res.sendFile(path.join(FRONTEND_BUILD, 'index.html'));
 });
 
 // Catch-all for unmatched routes.
