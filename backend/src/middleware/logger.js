@@ -1,0 +1,11 @@
+// Logs each request once the response is sent: method, url, status and duration.
+const logger = (req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const ms = Date.now() - start;
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} ${res.statusCode} ${ms}ms`);
+  });
+  next();
+};
+
+module.exports = logger;

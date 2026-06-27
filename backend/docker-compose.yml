@@ -1,0 +1,16 @@
+# Optional convenience: spin up a local MySQL 8 matching the default .env.
+# Usage: docker compose up -d   (then npm run db:migrate && npm run db:seed)
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mealy-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mealypass
+      MYSQL_DATABASE: mealy
+    ports:
+      - "3306:3306"
+    volumes:
+      - mealy-mysql-data:/var/lib/mysql
+
+volumes:
+  mealy-mysql-data:
