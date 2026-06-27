@@ -43,6 +43,25 @@ export function AuthProvider({ children }) {
     return profile;
   };
 
+  // Creates a real account, then reuses the same tail as login: store the token
+  // and userId so the api layer can attach x-user-id, then load the full profile.
+  const register = async ({ firstName, lastName, email, password }) => {
+    const { userId, token: newToken } = await authService.register({
+      firstName,
+      lastName,
+      email,
+      password
+    });
+    localStorage.setItem(TOKEN_KEY, newToken);
+    localStorage.setItem(USER_KEY, JSON.stringify({ userId }));
+    setToken(newToken);
+
+    const profile = await authService.getCurrentUser();
+    localStorage.setItem(USER_KEY, JSON.stringify(profile));
+    setUser(profile);
+    return profile;
+  };
+
   const logout = async () => {
     try {
       await authService.logout();
@@ -67,6 +86,7 @@ export function AuthProvider({ children }) {
     ready,
     isAuthenticated: !!token,
     login,
+    register,
     logout,
     updateUser
   };

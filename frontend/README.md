@@ -4,7 +4,7 @@ React frontend for the Mealy meal-planning app. It talks to the Express REST
 API built in Assignment 2 and is made with create-react-app, axios and React
 Router.
 
-Team: Matan & Or Cohen.
+Team: Matan Noam & Or Cohen.
 
 ## API Base URL
 

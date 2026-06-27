@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
@@ -94,7 +94,7 @@ function Login() {
         </button>
 
         <p className="login__hint">
-          Demo: any valid email and a 6+ character password works.
+          New here? <Link to="/register">Create an account</Link>
         </p>
       </form>
     </div>
